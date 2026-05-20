@@ -35,6 +35,7 @@ const BarcodeScanner = ({ user }) => {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [pictureUrl, setPictureUrl] = useState('');
   const [logLoading, setLogLoading] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
   const navigate = useNavigate();
 
@@ -51,6 +52,7 @@ const BarcodeScanner = ({ user }) => {
     setScannedProduct(null);
     setPictureUrl('');
     setSuccessMsg('');
+    setShowDetails(false);
 
     try {
       const data = await scanBarcode(code);
@@ -157,6 +159,29 @@ const BarcodeScanner = ({ user }) => {
                 </span>
               </div>
 
+              {/* Upload food image / select from folder */}
+              <div className="w-full max-w-sm mt-5 p-4 bg-brand-black/40 border border-brand-border rounded-2xl flex flex-col gap-2">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-brand-green">Select From Folder / Upload Meal Picture</span>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleFileUpload} 
+                  className="w-full text-xs text-brand-textMuted file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[10px] file:font-bold file:bg-brand-green file:text-black hover:file:bg-white transition-colors cursor-pointer" 
+                />
+                {pictureUrl && (
+                  <div className="relative mt-2 rounded-xl overflow-hidden border border-brand-border group">
+                    <img src={pictureUrl} alt="Preview" className="w-full h-32 object-cover" />
+                    <button 
+                      onClick={() => setPictureUrl('')}
+                      className="absolute top-2 right-2 bg-black/80 hover:bg-red-600 text-white p-1.5 rounded-lg transition-colors flex items-center justify-center"
+                      title="Remove image"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                )}
+              </div>
+
               {/* Help Tip Banner */}
               <div className="w-full mt-6 p-4 bg-brand-charcoal/50 border border-brand-border rounded-2xl flex items-start gap-3">
                 <Info size={16} className="text-brand-green shrink-0 mt-0.5" />
@@ -250,8 +275,17 @@ const BarcodeScanner = ({ user }) => {
                 <div className="p-4 bg-brand-green/10 border border-brand-green/20 text-brand-green rounded-2xl flex items-center justify-center text-sm font-bold animate-pulse">
                   {successMsg}
                 </div>
+              ) : !showDetails ? (
+                <div className="pt-2 text-center">
+                  <button
+                    onClick={() => setShowDetails(true)}
+                    className="w-full py-3.5 bg-brand-green text-black font-bold rounded-2xl hover:bg-white transition-all text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2"
+                  >
+                    <span>Let's see</span>
+                  </button>
+                </div>
               ) : (
-                <div className="space-y-5">
+                <div className="space-y-5 animate-in fade-in slide-in-from-bottom-3 duration-300">
                   
                   {/* Macro preview calculation */}
                   <div className="grid grid-cols-4 gap-2 text-center p-3 bg-brand-black border border-brand-border rounded-2xl">
