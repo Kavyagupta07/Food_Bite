@@ -8,14 +8,14 @@ export default {
     extend: {
       colors: {
         brand: {
-          black: "#0A0A0A",
-          charcoal: "#121212",
-          card: "#1A1A1A",
-          green: "#39FF14", // Neon Green
-          glow: "rgba(57, 255, 20, 0.4)",
-          gray: "#2A2A2A",
-          border: "#333333",
-          textMuted: "#A0A0A0",
+          black: "#1A1515", // Rich Espresso background
+          charcoal: "#241E1E", // Cocoa Charcoal
+          card: "#302828", // Lighter warm cocoa brown for card components
+          green: "#9D73E6", // Accent Warm Purple / Violet
+          glow: "rgba(157, 115, 230, 0.4)", // Purple Glow
+          gray: "#3E3333", // Warm Gray-Brown for hover states
+          border: "#4A3C3C", // Soft Brown Border
+          textMuted: "#CFC2C2", // Muted Warm Oatmeal Beige text
         }
       },
       fontFamily: {

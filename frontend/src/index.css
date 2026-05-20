@@ -6,8 +6,8 @@
 
 
 body {
-  background-color: #0A0A0A;
-  color: #FFFFFF;
+  background-color: #1A1515;
+  color: #FDFBF7;
   font-family: 'Outfit', 'Inter', sans-serif;
   margin: 0;
   padding: 0;
@@ -16,18 +16,18 @@ body {
 
 /* Glassmorphism custom classes */
 .glass-panel {
-  background: rgba(18, 18, 18, 0.7);
+  background: rgba(36, 30, 30, 0.75);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .glass-panel-hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .glass-panel-hover:hover {
-  border-color: rgba(57, 255, 20, 0.3);
-  box-shadow: 0 0 25px rgba(57, 255, 20, 0.1);
+  border-color: rgba(157, 115, 230, 0.3);
+  box-shadow: 0 0 25px rgba(157, 115, 230, 0.1);
   transform: translateY(-2px);
 }
 
@@ -35,8 +35,8 @@ body {
   transition: all 0.3s ease;
 }
 .neon-glow-hover:hover {
-  box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
-  text-shadow: 0 0 5px rgba(57, 255, 20, 0.3);
+  box-shadow: 0 0 15px rgba(157, 115, 230, 0.5);
+  text-shadow: 0 0 5px rgba(157, 115, 230, 0.3);
 }
 
 /* Custom Scrollbar */
@@ -45,14 +45,14 @@ body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: #1A1515;
 }
 ::-webkit-scrollbar-thumb {
-  background: #222222;
+  background: #3E3333;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #39FF14;
+  background: #9D73E6;
 }
 
 /* Hide scanner camera guide line animation */

@@ -193,7 +193,7 @@ const Dashboard = ({ user, setUser }) => {
                     cx="72"
                     cy="72"
                     r={radius}
-                    stroke="#39FF14"
+                    stroke="#9D73E6"
                     strokeWidth="12"
                     fill="transparent"
                     strokeDasharray={circumference}

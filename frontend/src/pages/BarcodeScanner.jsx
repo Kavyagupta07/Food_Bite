@@ -295,7 +295,7 @@ const BarcodeScanner = ({ user }) => {
               {/* Scanning Box frame */}
               <div className="w-full max-w-sm aspect-[4/3] bg-brand-black border-2 border-brand-border rounded-2xl relative overflow-hidden flex flex-col items-center justify-center">
                 {/* Laser animation */}
-                <div className="absolute left-0 right-0 h-0.5 bg-brand-green/80 shadow-[0_0_10px_#39FF14] scanner-laser z-10"></div>
+                <div className="absolute left-0 right-0 h-0.5 bg-brand-green/80 shadow-[0_0_10px_#9D73E6] scanner-laser z-10"></div>
                 
                 {/* Camera corner markings */}
                 <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-brand-green rounded-tl-md"></div>

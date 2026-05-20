@@ -169,7 +169,7 @@ const Analytics = ({ user }) => {
                     contentStyle={{ backgroundColor: '#1A1A1A', borderColor: '#333', borderRadius: '12px' }}
                     labelStyle={{ fontWeight: 'bold', color: '#FFF' }}
                   />
-                  <Bar dataKey="calories" name="Consumed" fill="#39FF14" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="calories" name="Consumed" fill="#9D73E6" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -193,7 +193,7 @@ const Analytics = ({ user }) => {
                     labelStyle={{ fontWeight: 'bold', color: '#FFF' }}
                   />
                   <Legend verticalAlign="top" height={36} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                  <Line type="monotone" dataKey="protein" name="Protein" stroke="#39FF14" strokeWidth={2.5} activeDot={{ r: 6 }} />
+                  <Line type="monotone" dataKey="protein" name="Protein" stroke="#9D73E6" strokeWidth={2.5} activeDot={{ r: 6 }} />
                   <Line type="monotone" dataKey="carbs" name="Carbs" stroke="#3b82f6" strokeWidth={2} />
                   <Line type="monotone" dataKey="fats" name="Fats" stroke="#f59e0b" strokeWidth={2} />
                 </LineChart>
