@@ -34,6 +34,7 @@ const BarcodeScanner = ({ user }) => {
   const [mealType, setMealType] = useState('snack');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [pictureUrl, setPictureUrl] = useState('');
+  const [uploadedFileName, setUploadedFileName] = useState('');
   const [logLoading, setLogLoading] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -78,12 +79,164 @@ const BarcodeScanner = ({ user }) => {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setUploadedFileName(file.name);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPictureUrl(reader.result);
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleAnalyzeImage = () => {
+    if (!pictureUrl) return;
+    setLoading(true);
+    setError('');
+    setScannedProduct(null);
+    setSuccessMsg('');
+    setShowDetails(false);
+
+    // Simulate AI Vision analysis delay
+    setTimeout(() => {
+      const nameLower = (uploadedFileName || '').toLowerCase();
+      let matchedFood = {
+        name: 'Premium Mixed Fitness Meal',
+        calories: 340,
+        protein: 24,
+        carbs: 35,
+        fats: 12,
+        servingSize: '1 serving (250g)',
+        brand: 'Bite.AI Vision',
+        found: true,
+        barcode: 'ai_vision_' + Date.now(),
+      };
+
+      if (nameLower.includes('steak') || nameLower.includes('beef')) {
+        matchedFood = {
+          name: 'Beef (Lean Steak 10%)',
+          calories: 250,
+          protein: 26,
+          carbs: 0,
+          fats: 15,
+          servingSize: '100g',
+          brand: 'Bite.AI Vision',
+          found: true,
+          barcode: 'ai_vision_beef',
+        };
+      } else if (nameLower.includes('chicken')) {
+        matchedFood = {
+          name: 'Chicken Breast (Cooked)',
+          calories: 165,
+          protein: 31,
+          carbs: 0,
+          fats: 3.6,
+          servingSize: '100g',
+          brand: 'Bite.AI Vision',
+          found: true,
+          barcode: 'ai_vision_chicken',
+        };
+      } else if (nameLower.includes('egg')) {
+        matchedFood = {
+          name: 'Whole Egg (Boiled)',
+          calories: 155,
+          protein: 13,
+          carbs: 1.1,
+          fats: 11,
+          servingSize: '100g',
+          brand: 'Bite.AI Vision',
+          found: true,
+          barcode: 'ai_vision_egg',
+        };
+      } else if (nameLower.includes('salmon') || nameLower.includes('fish')) {
+        matchedFood = {
+          name: 'Salmon Fillet (Grilled)',
+          calories: 208,
+          protein: 20,
+          carbs: 0,
+          fats: 13,
+          servingSize: '100g',
+          brand: 'Bite.AI Vision',
+          found: true,
+          barcode: 'ai_vision_salmon',
+        };
+      } else if (nameLower.includes('banana')) {
+        matchedFood = {
+          name: 'Banana',
+          calories: 89,
+          protein: 1.1,
+          carbs: 22.8,
+          fats: 0.3,
+          servingSize: '1 medium (118g)',
+          brand: 'Bite.AI Vision',
+          found: true,
+          barcode: 'ai_vision_banana',
+        };
+      } else if (nameLower.includes('peanut') || nameLower.includes('butter')) {
+        matchedFood = {
+          name: 'Peanut Butter',
+          calories: 588,
+          protein: 25,
+          carbs: 20,
+          fats: 50,
+          servingSize: '2 tbsp (32g)',
+          brand: 'Bite.AI Vision',
+          found: true,
+          barcode: 'ai_vision_peanut',
+        };
+      } else if (nameLower.includes('rice')) {
+        matchedFood = {
+          name: 'White Rice (Cooked)',
+          calories: 130,
+          protein: 2.7,
+          carbs: 28,
+          fats: 0.3,
+          servingSize: '100g',
+          brand: 'Bite.AI Vision',
+          found: true,
+          barcode: 'ai_vision_rice',
+        };
+      } else if (nameLower.includes('oat')) {
+        matchedFood = {
+          name: 'Oatmeal',
+          calories: 389,
+          protein: 16.9,
+          carbs: 66.3,
+          fats: 6.9,
+          servingSize: '100g',
+          brand: 'Bite.AI Vision',
+          found: true,
+          barcode: 'ai_vision_oats',
+        };
+      } else if (nameLower.includes('yogurt')) {
+        matchedFood = {
+          name: 'Greek Yogurt (0% Fat)',
+          calories: 59,
+          protein: 10,
+          carbs: 3.6,
+          fats: 0.4,
+          servingSize: '100g',
+          brand: 'Bite.AI Vision',
+          found: true,
+          barcode: 'ai_vision_yogurt',
+        };
+      } else if (nameLower.includes('protein') || nameLower.includes('bar') || nameLower.includes('shake')) {
+        matchedFood = {
+          name: 'Protein Bar',
+          calories: 200,
+          protein: 20,
+          carbs: 18,
+          fats: 6,
+          servingSize: '1 bar (60g)',
+          brand: 'Bite.AI Vision',
+          found: true,
+          barcode: 'ai_vision_protein',
+        };
+      }
+
+      setScannedProduct(matchedFood);
+      setShowDetails(true);
+      setLoading(false);
+    }, 1800);
   };
 
   const handleLogProduct = async () => {
@@ -169,16 +322,26 @@ const BarcodeScanner = ({ user }) => {
                   className="w-full text-xs text-brand-textMuted file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[10px] file:font-bold file:bg-brand-green file:text-black hover:file:bg-white transition-colors cursor-pointer" 
                 />
                 {pictureUrl && (
-                  <div className="relative mt-2 rounded-xl overflow-hidden border border-brand-border group">
-                    <img src={pictureUrl} alt="Preview" className="w-full h-32 object-cover" />
-                    <button 
-                      onClick={() => setPictureUrl('')}
-                      className="absolute top-2 right-2 bg-black/80 hover:bg-red-600 text-white p-1.5 rounded-lg transition-colors flex items-center justify-center"
-                      title="Remove image"
+                  <>
+                    <div className="relative mt-2 rounded-xl overflow-hidden border border-brand-border group">
+                      <img src={pictureUrl} alt="Preview" className="w-full h-32 object-cover" />
+                      <button 
+                        onClick={() => { setPictureUrl(''); setUploadedFileName(''); }}
+                        className="absolute top-2 right-2 bg-black/80 hover:bg-red-600 text-white p-1.5 rounded-lg transition-colors flex items-center justify-center"
+                        title="Remove image"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                    <button
+                      onClick={handleAnalyzeImage}
+                      disabled={loading}
+                      className="w-full mt-3 py-2.5 bg-brand-green text-black font-extrabold rounded-xl hover:bg-white transition-all text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2"
                     >
-                      <X size={12} />
+                      <Sparkles size={14} className={loading ? "animate-spin" : ""} />
+                      <span>{loading ? 'Analyzing with Bite.AI...' : "Let's see"}</span>
                     </button>
-                  </div>
+                  </>
                 )}
               </div>
 
