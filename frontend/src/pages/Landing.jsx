@@ -32,7 +32,7 @@ const Landing = () => {
   };
 
   return (
-    <div className="min-h-screen bg-brand-black text-white relative overflow-hidden flex flex-col">
+    <div className="min-h-screen bg-brand-black text-brand-charcoal relative overflow-hidden flex flex-col">
       {/* Background gradients for premium Nike/Gymshark aesthetic */}
       <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-brand-green/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-brand-green/5 rounded-full blur-[150px] pointer-events-none"></div>
@@ -49,7 +49,7 @@ const Landing = () => {
         </div>
         <Link 
           to="/login" 
-          className="px-6 py-2.5 rounded-full bg-brand-charcoal text-white font-medium hover:bg-brand-gray border border-brand-border transition-all duration-300 neon-glow-hover"
+          className="px-6 py-2.5 rounded-full bg-brand-charcoal text-white font-medium hover:bg-brand-green hover:text-brand-charcoal border border-brand-border transition-all duration-300 neon-glow-hover"
         >
           Sign In
         </Link>
@@ -93,14 +93,14 @@ const Landing = () => {
           >
             <Link 
               to="/login" 
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-brand-green text-black font-bold flex items-center justify-center gap-2 hover:bg-white hover:scale-105 transition-all duration-300"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-brand-green text-brand-charcoal font-bold flex items-center justify-center gap-2 hover:bg-brand-charcoal hover:text-white hover:scale-105 transition-all duration-300"
             >
               Start Free Today
               <ChevronRight size={18} />
             </Link>
             <a 
               href="#features" 
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-brand-charcoal text-white border border-brand-border font-medium hover:bg-brand-gray transition-all duration-300"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-brand-charcoal text-white border border-brand-border font-medium hover:bg-brand-green hover:text-brand-charcoal transition-all duration-300"
             >
               Explore Features
             </a>
@@ -119,7 +119,7 @@ const Landing = () => {
               <div className="p-4 bg-brand-green/10 rounded-2xl text-brand-green w-fit mb-6">
                 <Camera size={24} />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">Instant Barcode Scanner</h3>
+              <h3 className="text-xl font-bold mb-3 text-brand-charcoal">Instant Barcode Scanner</h3>
               <p className="text-brand-textMuted leading-relaxed text-sm">
                 Point your phone camera at any food barcode to instantly log ingredients, calories, and detailed protein/carb/fat ratios using OpenFoodFacts database.
               </p>
@@ -134,7 +134,7 @@ const Landing = () => {
               <div className="p-4 bg-brand-green/10 rounded-2xl text-brand-green w-fit mb-6">
                 <Search size={24} />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">Smart Gym Food Search</h3>
+              <h3 className="text-xl font-bold mb-3 text-brand-charcoal">Smart Gym Food Search</h3>
               <p className="text-brand-textMuted leading-relaxed text-sm">
                 Search standard meals or protein supplements. Access pre-configured macro breakdowns for eggs, chicken breast, whey isolates, oats, and beef.
               </p>
@@ -149,7 +149,7 @@ const Landing = () => {
               <div className="p-4 bg-brand-green/10 rounded-2xl text-brand-green w-fit mb-6">
                 <Brain size={24} />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">AI Coach Insights</h3>
+              <h3 className="text-xl font-bold mb-3 text-brand-charcoal">AI Coach Insights</h3>
               <p className="text-brand-textMuted leading-relaxed text-sm">
                 Get daily meal recommendations, weekly analytics reviews, water intake trackers, and gym motivation prompts computed dynamically for your goals.
               </p>
@@ -165,7 +165,7 @@ const Landing = () => {
             <span className="text-xs text-brand-textMuted uppercase tracking-wider">Manual Data Entry Required</span>
           </div>
           <div className="text-center">
-            <span className="block text-4xl font-extrabold text-white mb-1">100%</span>
+            <span className="block text-4xl font-extrabold text-brand-charcoal mb-1">100%</span>
             <span className="text-xs text-brand-textMuted uppercase tracking-wider">Free & Public Barcode Scanning</span>
           </div>
           <div className="text-center">
@@ -173,7 +173,7 @@ const Landing = () => {
             <span className="text-xs text-brand-textMuted uppercase tracking-wider">Personalized Macro Planning</span>
           </div>
           <div className="text-center">
-            <span className="block text-4xl font-extrabold text-white mb-1">🔥</span>
+            <span className="block text-4xl font-extrabold text-brand-charcoal mb-1">🔥</span>
             <span className="text-xs text-brand-textMuted uppercase tracking-wider">Streak & Consistency Tracking</span>
           </div>
         </section>

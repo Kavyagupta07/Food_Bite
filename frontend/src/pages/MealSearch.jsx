@@ -94,7 +94,7 @@ const MealSearch = ({ user }) => {
   };
 
   return (
-    <div className="flex-1 min-h-screen bg-brand-black md:pl-64 pb-24 md:pb-12 text-white relative">
+    <div className="flex-1 min-h-screen bg-brand-black md:pl-64 pb-24 md:pb-12 text-brand-charcoal relative">
       <div className="max-w-5xl mx-auto px-6 py-8">
         
         {/* Page Title */}
@@ -115,13 +115,13 @@ const MealSearch = ({ user }) => {
               placeholder="Search for Chicken Breast, Rice, Whey Protein, Oats..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-brand-charcoal border border-brand-border rounded-2xl focus:outline-none focus:border-brand-green transition-colors text-white placeholder-brand-textMuted text-sm font-semibold"
+              className="w-full pl-12 pr-4 py-4 bg-brand-black border border-brand-border rounded-2xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal placeholder-brand-textMuted text-sm font-semibold"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="px-8 py-4 bg-brand-green text-black font-bold rounded-2xl hover:bg-white hover:scale-105 transition-all text-sm shrink-0 shadow-lg disabled:opacity-50"
+            className="px-8 py-4 bg-brand-green text-brand-charcoal font-bold rounded-2xl hover:bg-brand-charcoal hover:text-white hover:scale-105 transition-all text-sm shrink-0 shadow-lg disabled:opacity-50"
           >
             {loading ? 'Searching...' : 'Search'}
           </button>
@@ -161,7 +161,7 @@ const MealSearch = ({ user }) => {
                     <span className="p-1 bg-brand-green/10 rounded text-brand-green shrink-0">
                       <Apple size={14} />
                     </span>
-                    <h3 className="font-bold text-base truncate text-white">{food.name}</h3>
+                    <h3 className="font-bold text-base truncate text-brand-charcoal">{food.name}</h3>
                     {food.brand && (
                       <span className="text-[10px] bg-brand-gray border border-brand-border text-brand-textMuted px-2 py-0.5 rounded-full uppercase">
                         {food.brand}
@@ -169,7 +169,7 @@ const MealSearch = ({ user }) => {
                     )}
                   </div>
                   <p className="text-xs text-brand-textMuted font-medium">
-                    Serving: {food.servingSize} &bull; P: <span className="text-white font-semibold">{food.protein}g</span> &bull; C: <span className="text-white font-semibold">{food.carbs}g</span> &bull; F: <span className="text-white font-semibold">{food.fats}g</span>
+                    Serving: {food.servingSize} &bull; P: <span className="text-brand-charcoal font-semibold">{food.protein}g</span> &bull; C: <span className="text-brand-charcoal font-semibold">{food.carbs}g</span> &bull; F: <span className="text-brand-charcoal font-semibold">{food.fats}g</span>
                   </p>
                 </div>
 
@@ -180,7 +180,7 @@ const MealSearch = ({ user }) => {
                   </div>
                   <button
                     onClick={() => openLogModal(food)}
-                    className="p-3.5 bg-brand-green/10 text-brand-green rounded-full hover:bg-brand-green hover:text-black transition-all duration-300"
+                    className="p-3.5 bg-brand-green/10 text-brand-green rounded-full hover:bg-brand-green hover:text-brand-charcoal transition-all duration-300"
                   >
                     <Plus size={16} />
                   </button>
@@ -197,14 +197,14 @@ const MealSearch = ({ user }) => {
               
               <button
                 onClick={closeLogModal}
-                className="absolute top-4 right-4 text-brand-textMuted hover:text-white p-1 rounded-lg transition-colors"
+                className="absolute top-4 right-4 text-brand-textMuted hover:text-brand-charcoal p-1 rounded-lg transition-colors"
               >
                 <X size={20} />
               </button>
 
               <div className="flex items-center gap-2 mb-4 pr-8">
                 <Dumbbell className="text-brand-green" size={20} />
-                <h2 className="text-lg font-extrabold truncate text-white">{selectedFood.name}</h2>
+                <h2 className="text-lg font-extrabold truncate text-brand-charcoal">{selectedFood.name}</h2>
               </div>
 
               {/* Toast response inside modal */}
@@ -222,15 +222,15 @@ const MealSearch = ({ user }) => {
                       <span className="text-[9px] text-brand-textMuted uppercase font-bold">Kcal</span>
                     </div>
                     <div className="p-1">
-                      <span className="block text-white font-black text-sm">{Math.round(selectedFood.protein * multiplier * 10) / 10}g</span>
+                      <span className="block text-brand-charcoal font-black text-sm">{Math.round(selectedFood.protein * multiplier * 10) / 10}g</span>
                       <span className="text-[9px] text-brand-textMuted uppercase font-bold">Protein</span>
                     </div>
                     <div className="p-1">
-                      <span className="block text-white font-black text-sm">{Math.round(selectedFood.carbs * multiplier * 10) / 10}g</span>
+                      <span className="block text-brand-charcoal font-black text-sm">{Math.round(selectedFood.carbs * multiplier * 10) / 10}g</span>
                       <span className="text-[9px] text-brand-textMuted uppercase font-bold">Carbs</span>
                     </div>
                     <div className="p-1">
-                      <span className="block text-white font-black text-sm">{Math.round(selectedFood.fats * multiplier * 10) / 10}g</span>
+                      <span className="block text-brand-charcoal font-black text-sm">{Math.round(selectedFood.fats * multiplier * 10) / 10}g</span>
                       <span className="text-[9px] text-brand-textMuted uppercase font-bold">Fats</span>
                     </div>
                   </div>
@@ -243,7 +243,7 @@ const MealSearch = ({ user }) => {
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => setMultiplier(prev => Math.max(0.5, prev - 0.5))}
-                        className="w-12 h-12 bg-brand-black border border-brand-border rounded-xl font-bold hover:border-brand-green transition-colors text-white"
+                        className="w-12 h-12 bg-brand-black border border-brand-border rounded-xl font-bold hover:border-brand-green transition-colors text-brand-charcoal"
                       >
                         -
                       </button>
@@ -253,11 +253,11 @@ const MealSearch = ({ user }) => {
                         step="0.1"
                         value={multiplier}
                         onChange={(e) => setMultiplier(Math.max(0.1, parseFloat(e.target.value) || 1))}
-                        className="flex-1 text-center py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-white font-bold"
+                        className="flex-1 text-center py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal font-bold"
                       />
                       <button
                         onClick={() => setMultiplier(prev => prev + 0.5)}
-                        className="w-12 h-12 bg-brand-black border border-brand-border rounded-xl font-bold hover:border-brand-green transition-colors text-white"
+                        className="w-12 h-12 bg-brand-black border border-brand-border rounded-xl font-bold hover:border-brand-green transition-colors text-brand-charcoal"
                       >
                         +
                       </button>
@@ -275,7 +275,7 @@ const MealSearch = ({ user }) => {
                     <select
                       value={mealType}
                       onChange={(e) => setMealType(e.target.value)}
-                      className="w-full py-3 px-4 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-white font-semibold text-sm cursor-pointer"
+                      className="w-full py-3 px-4 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal font-semibold text-sm cursor-pointer"
                     >
                       <option value="breakfast">☕ Breakfast</option>
                       <option value="lunch">🥗 Lunch</option>
@@ -293,7 +293,7 @@ const MealSearch = ({ user }) => {
                       type="date"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
-                      className="w-full py-3 px-4 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-white font-semibold text-sm cursor-pointer"
+                      className="w-full py-3 px-4 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal font-semibold text-sm cursor-pointer"
                     />
                   </div>
 
@@ -307,7 +307,7 @@ const MealSearch = ({ user }) => {
                       placeholder="https://example.com/my-meal.jpg"
                       value={pictureUrl}
                       onChange={(e) => setPictureUrl(e.target.value)}
-                      className="w-full py-3 px-4 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-white font-semibold text-sm placeholder-brand-textMuted"
+                      className="w-full py-3 px-4 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal font-semibold text-sm placeholder-brand-textMuted"
                     />
                   </div>
 
@@ -322,7 +322,7 @@ const MealSearch = ({ user }) => {
                     <button
                       onClick={handleLogMeal}
                       disabled={logLoading}
-                      className="flex-1 py-3.5 rounded-xl bg-brand-green text-black font-bold text-xs hover:bg-white transition-all uppercase tracking-wider"
+                      className="flex-1 py-3.5 rounded-xl bg-brand-green text-brand-charcoal font-bold text-xs hover:bg-brand-charcoal hover:text-white transition-all uppercase tracking-wider"
                     >
                       {logLoading ? 'Logging...' : 'Confirm Log'}
                     </button>

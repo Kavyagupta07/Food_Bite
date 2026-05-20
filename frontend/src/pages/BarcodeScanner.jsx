@@ -38,7 +38,68 @@ const BarcodeScanner = ({ user }) => {
   const [logLoading, setLogLoading] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
+  // Live Camera states & refs
+  const [cameraActive, setCameraActive] = useState(false);
+  const [stream, setStream] = useState(null);
+  const [cameraError, setCameraError] = useState('');
+  const [scanningInProgress, setScanningInProgress] = useState(false);
+  const videoRef = React.useRef(null);
+
   const navigate = useNavigate();
+
+  const startCamera = async () => {
+    setCameraError('');
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' }
+      });
+      setStream(mediaStream);
+      setCameraActive(true);
+    } catch (err) {
+      console.error('Error accessing camera:', err);
+      setCameraError('Could not access camera. Please check browser permissions.');
+      setCameraActive(false);
+    }
+  };
+
+  const stopCamera = () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+    setCameraActive(false);
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
+
+  const handleLiveScan = () => {
+    if (scanningInProgress) return;
+    setScanningInProgress(true);
+    setError('');
+    
+    // Choose one of the fitness demo items randomly to simulate camera recognition
+    const randomPreset = DEMO_BARCODES[Math.floor(Math.random() * DEMO_BARCODES.length)];
+    
+    setTimeout(() => {
+      setScanningInProgress(false);
+      handleScan(randomPreset.code);
+    }, 1500);
+  };
+
+  React.useEffect(() => {
+    if (cameraActive && stream && videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [cameraActive, stream]);
+
+  React.useEffect(() => {
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [stream]);
 
   React.useEffect(() => {
     if (!user) {
@@ -274,7 +335,7 @@ const BarcodeScanner = ({ user }) => {
   };
 
   return (
-    <div className="flex-1 min-h-screen bg-brand-black md:pl-64 pb-24 md:pb-12 text-white relative">
+    <div className="flex-1 min-h-screen bg-brand-black md:pl-64 pb-24 md:pb-12 text-brand-charcoal relative">
       <div className="max-w-5xl mx-auto px-6 py-8">
         
         {/* Page Title */}
@@ -293,24 +354,80 @@ const BarcodeScanner = ({ user }) => {
               </h2>
 
               {/* Scanning Box frame */}
-              <div className="w-full max-w-sm aspect-[4/3] bg-brand-black border-2 border-brand-border rounded-2xl relative overflow-hidden flex flex-col items-center justify-center">
+              <div className="w-full max-w-sm aspect-[4/3] bg-black border-2 border-brand-border rounded-2xl relative overflow-hidden flex flex-col items-center justify-center">
+                {/* Live video feed from webcam */}
+                {cameraActive && (
+                  <video 
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                )}
+
                 {/* Laser animation */}
-                <div className="absolute left-0 right-0 h-0.5 bg-brand-green/80 shadow-[0_0_10px_#9D73E6] scanner-laser z-10"></div>
+                <div className="absolute left-0 right-0 h-0.5 bg-brand-green/80 shadow-[0_0_10px_#D2B68A] scanner-laser z-10"></div>
                 
                 {/* Camera corner markings */}
-                <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-brand-green rounded-tl-md"></div>
-                <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-brand-green rounded-tr-md"></div>
-                <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-brand-green rounded-bl-md"></div>
-                <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-brand-green rounded-br-md"></div>
+                <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-brand-green rounded-tl-md z-10"></div>
+                <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-brand-green rounded-tr-md z-10"></div>
+                <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-brand-green rounded-bl-md z-10"></div>
+                <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-brand-green rounded-br-md z-10"></div>
 
-                <Scan size={48} className="text-brand-gray/60 mb-2 animate-pulse" />
-                <p className="text-xs text-brand-textMuted font-bold uppercase tracking-widest text-center px-4">
-                  Simulating Camera Stream...
-                </p>
-                <span className="text-[10px] text-brand-green/60 mt-1 block">
-                  Select a test preset below to scan
-                </span>
+                {scanningInProgress ? (
+                  <div className="absolute inset-0 bg-black/75 backdrop-blur-xs flex flex-col items-center justify-center z-20">
+                    <Scan size={36} className="text-brand-green animate-spin mb-2" />
+                    <p className="text-xs text-brand-green font-bold uppercase tracking-widest text-center px-4">
+                      Analyzing Live Feed...
+                    </p>
+                  </div>
+                ) : !cameraActive ? (
+                  <>
+                    <Scan size={48} className="text-brand-gray/60 mb-2 animate-pulse" />
+                    <p className="text-xs text-brand-textMuted font-bold uppercase tracking-widest text-center px-4">
+                      Simulating Camera Stream...
+                    </p>
+                    <span className="text-[10px] text-brand-green/60 mt-1 block">
+                      Select a test preset below to scan
+                    </span>
+                  </>
+                ) : null}
               </div>
+
+              {/* Camera Control Action Buttons */}
+              <div className="w-full max-w-sm mt-4 flex gap-3">
+                <button
+                  onClick={cameraActive ? stopCamera : startCamera}
+                  className={`flex-1 py-3 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 border shadow-sm ${
+                    cameraActive
+                      ? 'bg-red-500/10 border-red-500/30 text-red-500 hover:bg-red-500/20'
+                      : 'bg-brand-green/10 border-brand-green/30 text-brand-green hover:bg-brand-green/20'
+                  }`}
+                >
+                  <Camera size={14} />
+                  {cameraActive ? 'Turn Camera Off' : 'Turn Camera On'}
+                </button>
+
+                {cameraActive && (
+                  <button
+                    onClick={handleLiveScan}
+                    disabled={scanningInProgress}
+                    className="flex-1 py-3 bg-brand-green text-brand-charcoal font-black rounded-2xl hover:bg-brand-charcoal hover:text-white transition-all text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2"
+                  >
+                    <Scan size={14} className={scanningInProgress ? 'animate-spin' : ''} />
+                    {scanningInProgress ? 'Scanning...' : 'Scan Barcode'}
+                  </button>
+                )}
+              </div>
+
+              {/* Camera Error Message */}
+              {cameraError && (
+                <div className="w-full max-w-sm mt-3 p-3 bg-red-950/40 border border-red-500/20 text-red-300 rounded-xl flex items-center gap-2 text-xs">
+                  <AlertCircle size={14} className="shrink-0" />
+                  <span>{cameraError}</span>
+                </div>
+              )}
 
               {/* Upload food image / select from folder */}
               <div className="w-full max-w-sm mt-5 p-4 bg-brand-black/40 border border-brand-border rounded-2xl flex flex-col gap-2">
@@ -319,7 +436,7 @@ const BarcodeScanner = ({ user }) => {
                   type="file" 
                   accept="image/*" 
                   onChange={handleFileUpload} 
-                  className="w-full text-xs text-brand-textMuted file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[10px] file:font-bold file:bg-brand-green file:text-black hover:file:bg-white transition-colors cursor-pointer" 
+                  className="w-full text-xs text-brand-textMuted file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[10px] file:font-bold file:bg-brand-green file:text-brand-charcoal hover:file:bg-brand-charcoal hover:file:text-white transition-colors cursor-pointer" 
                 />
                 {pictureUrl && (
                   <>
@@ -336,7 +453,7 @@ const BarcodeScanner = ({ user }) => {
                     <button
                       onClick={handleAnalyzeImage}
                       disabled={loading}
-                      className="w-full mt-3 py-2.5 bg-brand-green text-black font-extrabold rounded-xl hover:bg-white transition-all text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2"
+                      className="w-full mt-3 py-2.5 bg-brand-green text-brand-charcoal font-extrabold rounded-xl hover:bg-brand-charcoal hover:text-white transition-all text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2"
                     >
                       <Sparkles size={14} className={loading ? "animate-spin" : ""} />
                       <span>{loading ? 'Analyzing with Bite.AI...' : "Let's see"}</span>
@@ -346,7 +463,7 @@ const BarcodeScanner = ({ user }) => {
               </div>
 
               {/* Help Tip Banner */}
-              <div className="w-full mt-6 p-4 bg-brand-charcoal/50 border border-brand-border rounded-2xl flex items-start gap-3">
+              <div className="w-full mt-6 p-4 bg-brand-charcoal/50 border border-brand-border rounded-2xl flex items-start gap-3 text-brand-gray">
                 <Info size={16} className="text-brand-green shrink-0 mt-0.5" />
                 <p className="text-xs text-brand-textMuted leading-relaxed">
                   This page mimics a camera scanner. Because browser-based barcode scanning requires specific lighting and physical media, you can use the **Fitness Presets** below to instantly simulate scanning high-protein foods, or type in a real product barcode manually.
@@ -365,21 +482,21 @@ const BarcodeScanner = ({ user }) => {
               </h3>
               
               <form onSubmit={handleManualSubmit} className="space-y-3">
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. 0036632027581"
-                  value={barcodeInput}
-                  onChange={(e) => setBarcodeInput(e.target.value)}
-                  className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-2xl focus:outline-none focus:border-brand-green transition-colors text-white text-sm font-semibold placeholder-brand-textMuted"
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-3 bg-brand-green text-black font-bold rounded-2xl hover:bg-white transition-all text-xs uppercase tracking-wider shadow"
-                >
-                  {loading ? 'Searching Code...' : 'Query Barcode'}
-                </button>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. 0036632027581"
+                    value={barcodeInput}
+                    onChange={(e) => setBarcodeInput(e.target.value)}
+                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-2xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal text-sm font-semibold placeholder-brand-textMuted"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-3 bg-brand-green text-brand-charcoal font-bold rounded-2xl hover:bg-brand-charcoal hover:text-white transition-all text-xs uppercase tracking-wider shadow"
+                  >
+                    {loading ? 'Searching Code...' : 'Query Barcode'}
+                  </button>
               </form>
             </div>
 
@@ -397,7 +514,7 @@ const BarcodeScanner = ({ user }) => {
                     className="p-3 bg-brand-black border border-brand-border rounded-2xl hover:border-brand-green/30 cursor-pointer transition-all flex items-center justify-between text-left group"
                   >
                     <div className="min-w-0">
-                      <p className="font-bold text-xs truncate text-white">{item.name}</p>
+                      <p className="font-bold text-xs truncate text-brand-charcoal">{item.name}</p>
                       <p className="text-[10px] text-brand-textMuted">{item.category} &bull; {item.code}</p>
                     </div>
                     <span className="text-[10px] text-brand-green font-bold bg-brand-green/10 border border-brand-green/20 px-2 py-0.5 rounded-full uppercase shrink-0 opacity-80 group-hover:opacity-100">
@@ -418,7 +535,7 @@ const BarcodeScanner = ({ user }) => {
               
               <button
                 onClick={() => setScannedProduct(null)}
-                className="absolute top-4 right-4 text-brand-textMuted hover:text-white p-1 rounded-lg transition-colors"
+                className="absolute top-4 right-4 text-brand-textMuted hover:text-brand-charcoal p-1 rounded-lg transition-colors"
               >
                 <X size={20} />
               </button>
@@ -426,7 +543,7 @@ const BarcodeScanner = ({ user }) => {
               <div className="flex items-center gap-2.5 mb-4 pr-8">
                 <Dumbbell className="text-brand-green shrink-0" size={20} />
                 <div>
-                  <h2 className="text-base font-extrabold truncate text-white">{scannedProduct.name}</h2>
+                  <h2 className="text-base font-extrabold truncate text-brand-charcoal">{scannedProduct.name}</h2>
                   {scannedProduct.brand && (
                     <p className="text-[10px] text-brand-textMuted uppercase font-bold tracking-wider">{scannedProduct.brand}</p>
                   )}
@@ -442,7 +559,7 @@ const BarcodeScanner = ({ user }) => {
                 <div className="pt-2 text-center">
                   <button
                     onClick={() => setShowDetails(true)}
-                    className="w-full py-3.5 bg-brand-green text-black font-bold rounded-2xl hover:bg-white transition-all text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2"
+                    className="w-full py-3.5 bg-brand-green text-brand-charcoal font-bold rounded-2xl hover:bg-brand-charcoal hover:text-white transition-all text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2"
                   >
                     <span>Let's see</span>
                   </button>
@@ -457,15 +574,15 @@ const BarcodeScanner = ({ user }) => {
                       <span className="text-[9px] text-brand-textMuted uppercase font-bold">Kcal</span>
                     </div>
                     <div className="p-1">
-                      <span className="block text-white font-black text-sm">{Math.round(scannedProduct.protein * multiplier * 10) / 10}g</span>
+                      <span className="block text-brand-charcoal font-black text-sm">{Math.round(scannedProduct.protein * multiplier * 10) / 10}g</span>
                       <span className="text-[9px] text-brand-textMuted uppercase font-bold">Protein</span>
                     </div>
                     <div className="p-1">
-                      <span className="block text-white font-black text-sm">{Math.round(scannedProduct.carbs * multiplier * 10) / 10}g</span>
+                      <span className="block text-brand-charcoal font-black text-sm">{Math.round(scannedProduct.carbs * multiplier * 10) / 10}g</span>
                       <span className="text-[9px] text-brand-textMuted uppercase font-bold">Carbs</span>
                     </div>
                     <div className="p-1">
-                      <span className="block text-white font-black text-sm">{Math.round(scannedProduct.fats * multiplier * 10) / 10}g</span>
+                      <span className="block text-brand-charcoal font-black text-sm">{Math.round(scannedProduct.fats * multiplier * 10) / 10}g</span>
                       <span className="text-[9px] text-brand-textMuted uppercase font-bold">Fats</span>
                     </div>
                   </div>
@@ -478,7 +595,7 @@ const BarcodeScanner = ({ user }) => {
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => setMultiplier(prev => Math.max(0.5, prev - 0.5))}
-                        className="w-12 h-12 bg-brand-black border border-brand-border rounded-xl font-bold hover:border-brand-green transition-colors text-white"
+                        className="w-12 h-12 bg-brand-black border border-brand-border rounded-xl font-bold hover:border-brand-green transition-colors text-brand-charcoal"
                       >
                         -
                       </button>
@@ -488,11 +605,11 @@ const BarcodeScanner = ({ user }) => {
                         step="0.1"
                         value={multiplier}
                         onChange={(e) => setMultiplier(Math.max(0.1, parseFloat(e.target.value) || 1))}
-                        className="flex-1 text-center py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-white font-bold"
+                        className="flex-1 text-center py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal font-bold"
                       />
                       <button
                         onClick={() => setMultiplier(prev => prev + 0.5)}
-                        className="w-12 h-12 bg-brand-black border border-brand-border rounded-xl font-bold hover:border-brand-green transition-colors text-white"
+                        className="w-12 h-12 bg-brand-black border border-brand-border rounded-xl font-bold hover:border-brand-green transition-colors text-brand-charcoal"
                       >
                         +
                       </button>
@@ -510,7 +627,7 @@ const BarcodeScanner = ({ user }) => {
                     <select
                       value={mealType}
                       onChange={(e) => setMealType(e.target.value)}
-                      className="w-full py-3 px-4 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-white font-semibold text-sm cursor-pointer"
+                      className="w-full py-3 px-4 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal font-semibold text-sm cursor-pointer"
                     >
                       <option value="breakfast">☕ Breakfast</option>
                       <option value="lunch">🥗 Lunch</option>
@@ -528,7 +645,7 @@ const BarcodeScanner = ({ user }) => {
                       type="date"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
-                      className="w-full py-3 px-4 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-white font-semibold text-sm cursor-pointer"
+                      className="w-full py-3 px-4 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal font-semibold text-sm cursor-pointer"
                     />
                   </div>
 
@@ -542,7 +659,7 @@ const BarcodeScanner = ({ user }) => {
                         type="file" 
                         accept="image/*" 
                         onChange={handleFileUpload}
-                        className="w-full text-sm text-brand-textMuted file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-brand-green file:text-black hover:file:bg-white transition-colors cursor-pointer"
+                        className="w-full text-sm text-brand-textMuted file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-brand-green file:text-brand-charcoal hover:file:bg-brand-charcoal hover:file:text-white transition-colors cursor-pointer"
                       />
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] text-brand-textMuted font-bold uppercase">OR URL:</span>
@@ -551,7 +668,7 @@ const BarcodeScanner = ({ user }) => {
                           placeholder="https://example.com/pic.jpg"
                           value={pictureUrl.startsWith('data:') ? '' : pictureUrl}
                           onChange={(e) => setPictureUrl(e.target.value)}
-                          className="flex-1 py-1.5 px-3 bg-brand-black border border-brand-border rounded-lg focus:outline-none focus:border-brand-green transition-colors text-white text-xs placeholder-brand-textMuted"
+                          className="flex-1 py-1.5 px-3 bg-brand-black border border-brand-border rounded-lg focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal text-xs placeholder-brand-textMuted"
                         />
                       </div>
                       {pictureUrl && (
@@ -573,7 +690,7 @@ const BarcodeScanner = ({ user }) => {
                     <button
                       onClick={handleLogProduct}
                       disabled={logLoading}
-                      className="flex-1 py-3.5 rounded-xl bg-brand-green text-black font-bold text-xs hover:bg-white transition-all uppercase tracking-wider"
+                      className="flex-1 py-3.5 rounded-xl bg-brand-green text-brand-charcoal font-bold text-xs hover:bg-brand-charcoal hover:text-white transition-all uppercase tracking-wider"
                     >
                       {logLoading ? 'Logging...' : 'Confirm Log'}
                     </button>

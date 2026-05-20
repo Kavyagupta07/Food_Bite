@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Dumbbell, Scale, Activity, Save, Award, BrainCircuit, ShieldCheck } from 'lucide-react';
+import { User, Dumbbell, Scale, Activity, Save, Award, BrainCircuit, ShieldCheck, Camera, Upload, Link2 } from 'lucide-react';
 import { updateProfile } from '../services/api';
 
 const UserProfile = ({ user, setUser }) => {
@@ -22,6 +22,17 @@ const UserProfile = ({ user, setUser }) => {
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
+  const [profilePicture, setProfilePicture] = useState('');
+
+  const avatarTemplates = [
+    { name: 'Iron Lifter', value: 'avatar_iron_lifter', emoji: '🏋️‍♂️', bg: 'from-emerald-500 to-teal-700' },
+    { name: 'Speed Runner', value: 'avatar_speed_runner', emoji: '🏃‍♀️', bg: 'from-amber-500 to-rose-600' },
+    { name: 'Yoga Zen', value: 'avatar_yoga_zen', emoji: '🧘', bg: 'from-indigo-500 to-violet-700' },
+    { name: 'Cycle Pro', value: 'avatar_cycle_pro', emoji: '🚴', bg: 'from-cyan-400 to-sky-600' },
+    { name: 'Nutrition Guru', value: 'avatar_nutrition_guru', emoji: '🥗', bg: 'from-emerald-400 to-green-600' },
+    { name: 'Beast Mode', value: 'avatar_beast_mode', emoji: '🥊', bg: 'from-rose-500 to-red-800' }
+  ];
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,13 +40,13 @@ const UserProfile = ({ user, setUser }) => {
       navigate('/login');
       return;
     }
-    // Load initial values
     setName(user.name || '');
     setWeight(user.weight || 70);
     setHeight(user.height || 175);
     setAge(user.age || 25);
     setGender(user.gender || 'male');
     setActivityLevel(user.activityLevel || 'moderately_active');
+    setProfilePicture(user.profilePicture || '');
     
     if (user.goals) {
       setCalories(user.goals.calories || 2000);
@@ -113,6 +124,48 @@ const UserProfile = ({ user, setUser }) => {
     setTimeout(() => setSuccessMsg(''), 3000);
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2000000) { // Limit size to ~2MB for storage
+        setErrorMsg('Selected image is too large! Please choose an image smaller than 2MB.');
+        setTimeout(() => setErrorMsg(''), 4000);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicture(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const renderAvatar = (urlOrTemplate, nameString, sizeClass = "w-24 h-24 text-3xl") => {
+    if (urlOrTemplate && urlOrTemplate.startsWith('template:')) {
+      const templateKey = urlOrTemplate.split(':')[1];
+      const template = avatarTemplates.find(t => t.value === templateKey) || avatarTemplates[0];
+      return (
+        <div className={`${sizeClass} rounded-full bg-gradient-to-br ${template.bg} flex items-center justify-center border-2 border-brand-green font-bold shadow-lg shrink-0 transform hover:scale-105 transition-all duration-300`}>
+          <span>{template.emoji}</span>
+        </div>
+      );
+    } else if (urlOrTemplate) {
+      return (
+        <img
+          src={urlOrTemplate}
+          alt="Avatar"
+          className={`${sizeClass} rounded-full object-cover border-2 border-brand-green shadow-lg shrink-0 transform hover:scale-105 transition-all duration-300`}
+        />
+      );
+    } else {
+      return (
+        <div className={`${sizeClass} rounded-full bg-brand-green/20 border-2 border-brand-green/50 flex items-center justify-center font-black text-brand-green uppercase shrink-0`}>
+          {nameString ? nameString[0] : 'U'}
+        </div>
+      );
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -126,6 +179,7 @@ const UserProfile = ({ user, setUser }) => {
       age: Number(age),
       gender,
       activityLevel,
+      profilePicture,
       goals: {
         calories: Number(calories),
         protein: Number(protein),
@@ -150,7 +204,7 @@ const UserProfile = ({ user, setUser }) => {
   };
 
   return (
-    <div className="flex-1 min-h-screen bg-brand-black md:pl-64 pb-24 md:pb-12 text-white relative">
+    <div className="flex-1 min-h-screen bg-brand-beige md:pl-64 pb-24 md:pb-12 text-brand-charcoal relative">
       <div className="max-w-5xl mx-auto px-6 py-8">
         
         {/* Title */}
@@ -177,6 +231,98 @@ const UserProfile = ({ user, setUser }) => {
               </div>
             )}
 
+            {/* Profile Picture Panel */}
+            <div className="glass-panel p-6 rounded-3xl border border-brand-border space-y-6">
+              <h2 className="text-base font-bold uppercase tracking-wider flex items-center gap-2 border-b border-brand-border pb-3">
+                <User className="text-brand-green" size={18} /> Profile Picture
+              </h2>
+
+              <div className="flex flex-col sm:flex-row items-center gap-6">
+                {/* Visual Avatar Preview */}
+                <div className="relative group shrink-0">
+                  {renderAvatar(profilePicture, name, "w-28 h-28 text-4xl")}
+                  <label className="absolute inset-0 bg-brand-charcoal/80 rounded-full flex flex-col items-center justify-center text-white text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer border border-brand-green/40">
+                    <Camera size={18} className="mb-1 text-brand-green animate-bounce" />
+                    <span>Upload Custom</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                <div className="flex-1 space-y-4 w-full">
+                  <div>
+                    <h3 className="text-xs font-bold text-brand-charcoal uppercase tracking-wider mb-2">Select Fitness Avatar</h3>
+                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                      {avatarTemplates.map((tmpl) => {
+                        const isSelected = profilePicture === `template:${tmpl.value}`;
+                        return (
+                          <button
+                            key={tmpl.value}
+                            type="button"
+                            onClick={() => setProfilePicture(`template:${tmpl.value}`)}
+                            title={tmpl.name}
+                            className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${tmpl.bg} flex items-center justify-center text-xl shrink-0 transition-all duration-300 relative border-2 ${
+                              isSelected ? 'border-brand-charcoal scale-110 shadow-md ring-2 ring-brand-green' : 'border-transparent opacity-80 hover:opacity-100 hover:scale-105'
+                            }`}
+                          >
+                            <span>{tmpl.emoji}</span>
+                            {isSelected && (
+                              <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-green text-brand-charcoal rounded-full flex items-center justify-center text-[8px] font-black">✓</span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div className="h-[1px] bg-brand-border flex-1"></div>
+                    <span className="text-[10px] font-bold text-brand-textMuted uppercase">Or</span>
+                    <div className="h-[1px] bg-brand-border flex-1"></div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="relative">
+                      <label className="flex items-center gap-1.5 text-xs font-bold text-brand-textMuted uppercase tracking-wider mb-2">
+                        <Upload size={12} className="text-brand-green" /> Custom Local File
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => document.getElementById('custom-file-upload').click()}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-brand-beige border border-brand-border rounded-xl text-xs font-bold text-brand-charcoal hover:bg-brand-charcoal hover:text-white transition-all cursor-pointer"
+                      >
+                        <Upload size={14} /> Upload Image File
+                      </button>
+                      <input
+                        id="custom-file-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="flex items-center gap-1.5 text-xs font-bold text-brand-textMuted uppercase tracking-wider mb-2">
+                        <Link2 size={12} className="text-brand-green" /> Custom Image URL
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="https://example.com/avatar.jpg"
+                        value={profilePicture && !profilePicture.startsWith('template:') && !profilePicture.startsWith('data:') ? profilePicture : ''}
+                        onChange={(e) => setProfilePicture(e.target.value)}
+                        className="w-full px-4 py-2.5 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-xs font-semibold"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Section 1: Dimensions */}
             <div className="glass-panel p-6 rounded-3xl border border-brand-border space-y-5">
               <h2 className="text-base font-bold uppercase tracking-wider flex items-center gap-2 border-b border-brand-border pb-3">
@@ -193,7 +339,7 @@ const UserProfile = ({ user, setUser }) => {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-white text-sm font-semibold"
+                    className="w-full px-4 py-3 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-sm font-semibold"
                   />
                 </div>
 
@@ -204,7 +350,7 @@ const UserProfile = ({ user, setUser }) => {
                   <select
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
-                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-white text-sm font-semibold cursor-pointer"
+                    className="w-full px-4 py-3 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-sm font-semibold cursor-pointer"
                   >
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -223,7 +369,7 @@ const UserProfile = ({ user, setUser }) => {
                     max="300"
                     value={weight}
                     onChange={(e) => setWeight(Math.max(10, parseFloat(e.target.value) || 0))}
-                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-white text-sm font-semibold"
+                    className="w-full px-4 py-3 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-sm font-semibold"
                   />
                 </div>
 
@@ -238,7 +384,7 @@ const UserProfile = ({ user, setUser }) => {
                     max="250"
                     value={height}
                     onChange={(e) => setHeight(Math.max(50, parseFloat(e.target.value) || 0))}
-                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-white text-sm font-semibold"
+                    className="w-full px-4 py-3 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-sm font-semibold"
                   />
                 </div>
 
@@ -253,7 +399,7 @@ const UserProfile = ({ user, setUser }) => {
                     max="120"
                     value={age}
                     onChange={(e) => setAge(Math.max(1, parseInt(e.target.value) || 0))}
-                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-white text-sm font-semibold"
+                    className="w-full px-4 py-3 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-sm font-semibold"
                   />
                 </div>
 
@@ -264,7 +410,7 @@ const UserProfile = ({ user, setUser }) => {
                   <select
                     value={activityLevel}
                     onChange={(e) => setActivityLevel(e.target.value)}
-                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-white text-sm font-semibold cursor-pointer"
+                    className="w-full px-4 py-3 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-sm font-semibold cursor-pointer"
                   >
                     <option value="sedentary">Sedentary (No training)</option>
                     <option value="lightly_active">Lightly Active (1-2 days/wk)</option>
@@ -285,7 +431,7 @@ const UserProfile = ({ user, setUser }) => {
                 <button
                   type="button"
                   onClick={calculateRecommendedMacros}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-brand-green/10 border border-brand-green/20 text-brand-green hover:bg-brand-green hover:text-black font-bold text-xs transition-all duration-300"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-brand-green/10 border border-brand-green/20 text-brand-green hover:bg-brand-green hover:text-brand-charcoal font-bold text-xs transition-all duration-300"
                 >
                   <BrainCircuit size={13} /> Compute Anabolic Targets
                 </button>
@@ -301,7 +447,7 @@ const UserProfile = ({ user, setUser }) => {
                     required
                     value={calories}
                     onChange={(e) => setCalories(Math.max(100, parseInt(e.target.value) || 0))}
-                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-white text-sm font-semibold"
+                    className="w-full px-4 py-3 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-sm font-semibold"
                   />
                 </div>
 
@@ -314,7 +460,7 @@ const UserProfile = ({ user, setUser }) => {
                     required
                     value={protein}
                     onChange={(e) => setProtein(Math.max(0, parseInt(e.target.value) || 0))}
-                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-white text-sm font-semibold"
+                    className="w-full px-4 py-3 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-sm font-semibold"
                   />
                 </div>
 
@@ -327,7 +473,7 @@ const UserProfile = ({ user, setUser }) => {
                     required
                     value={carbs}
                     onChange={(e) => setCarbs(Math.max(0, parseInt(e.target.value) || 0))}
-                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-white text-sm font-semibold"
+                    className="w-full px-4 py-3 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-sm font-semibold"
                   />
                 </div>
 
@@ -340,7 +486,7 @@ const UserProfile = ({ user, setUser }) => {
                     required
                     value={fats}
                     onChange={(e) => setFats(Math.max(0, parseInt(e.target.value) || 0))}
-                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-white text-sm font-semibold"
+                    className="w-full px-4 py-3 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-sm font-semibold"
                   />
                 </div>
 
@@ -354,7 +500,7 @@ const UserProfile = ({ user, setUser }) => {
                     step="100"
                     value={water}
                     onChange={(e) => setWater(Math.max(100, parseInt(e.target.value) || 0))}
-                    className="w-full px-4 py-3 bg-brand-black border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-white text-sm font-semibold"
+                    className="w-full px-4 py-3 bg-brand-beige border border-brand-border rounded-xl focus:outline-none focus:border-brand-green text-brand-charcoal text-sm font-semibold"
                   />
                 </div>
               </div>
@@ -364,7 +510,7 @@ const UserProfile = ({ user, setUser }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-fit px-8 py-4 bg-brand-green text-black font-bold rounded-2xl hover:bg-white hover:scale-105 transition-all text-sm flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
+              className="w-full sm:w-fit px-8 py-4 bg-brand-green text-brand-charcoal font-bold rounded-2xl hover:bg-brand-charcoal hover:text-white hover:scale-105 transition-all text-sm flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
             >
               <Save size={16} />
               {loading ? 'Saving adjustments...' : 'Save Settings'}
@@ -376,13 +522,13 @@ const UserProfile = ({ user, setUser }) => {
           <div className="space-y-8">
             
             {/* BMI status widget */}
-            <div className="glass-panel p-6 rounded-3xl border border-brand-border relative overflow-hidden bg-gradient-to-br from-brand-charcoal to-brand-charcoal/40 space-y-6">
+            <div className="glass-panel p-6 rounded-3xl border border-brand-border relative overflow-hidden space-y-6 text-brand-charcoal">
               <h2 className="text-sm font-black uppercase tracking-wider flex items-center gap-2 border-b border-brand-border/40 pb-3">
                 <Activity className="text-brand-green" size={16} /> Body Mass Index (BMI)
               </h2>
 
               <div className="text-center py-4">
-                <span className="block text-5xl font-black text-white mb-2">{bmi}</span>
+                <span className="block text-5xl font-black text-brand-charcoal mb-2">{bmi}</span>
                 <span className={`inline-block px-3 py-1 rounded-full border text-xs font-bold ${bmiColor}`}>
                   {bmiCategory}
                 </span>
@@ -423,7 +569,7 @@ const UserProfile = ({ user, setUser }) => {
                     🔥
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">Daily Consistency Streak</h4>
+                    <h4 className="text-xs font-bold text-brand-charcoal">Daily Consistency Streak</h4>
                     <p className="text-[10px] text-brand-textMuted mt-0.5">Maintain logging. Current: {user?.streak || 1} day streak.</p>
                   </div>
                 </div>
@@ -433,7 +579,7 @@ const UserProfile = ({ user, setUser }) => {
                     💧
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white font-sans">Hydration Master</h4>
+                    <h4 className="text-xs font-bold text-brand-charcoal font-sans">Hydration Master</h4>
                     <p className="text-[10px] text-brand-textMuted mt-0.5">Reach your hydration goals for 7 consecutive days.</p>
                   </div>
                 </div>

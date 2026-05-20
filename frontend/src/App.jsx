@@ -38,15 +38,15 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-brand-black flex items-center justify-center text-brand-green">
-        <div className="w-12 h-12 border-4 border-brand-green/20 border-t-brand-green rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-brand-beige flex items-center justify-center text-brand-charcoal">
+        <div className="w-12 h-12 border-4 border-brand-charcoal/20 border-t-brand-charcoal rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
     <Router>
-      <div className="min-h-screen bg-brand-black text-white flex flex-col md:flex-row">
+      <div className="min-h-screen bg-brand-beige text-brand-charcoal flex flex-col md:flex-row">
         {/* Navigation Sidebar / Bottom Bar */}
         <Navigation user={user} logout={logout} />
 

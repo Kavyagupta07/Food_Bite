@@ -16,6 +16,41 @@ const Navigation = ({ user, logout }) => {
 
   if (!user) return null; // Only show navigation for logged-in users
 
+  const avatarTemplates = [
+    { name: 'Iron Lifter', value: 'avatar_iron_lifter', emoji: '🏋️‍♂️', bg: 'from-emerald-500 to-teal-700' },
+    { name: 'Speed Runner', value: 'avatar_speed_runner', emoji: '🏃‍♀️', bg: 'from-amber-500 to-rose-600' },
+    { name: 'Yoga Zen', value: 'avatar_yoga_zen', emoji: '🧘', bg: 'from-indigo-500 to-violet-700' },
+    { name: 'Cycle Pro', value: 'avatar_cycle_pro', emoji: '🚴', bg: 'from-cyan-400 to-sky-600' },
+    { name: 'Nutrition Guru', value: 'avatar_nutrition_guru', emoji: '🥗', bg: 'from-emerald-400 to-green-600' },
+    { name: 'Beast Mode', value: 'avatar_beast_mode', emoji: '🥊', bg: 'from-rose-500 to-red-800' }
+  ];
+
+  const renderAvatar = (urlOrTemplate, nameString, sizeClass = "w-10 h-10 text-lg") => {
+    if (urlOrTemplate && urlOrTemplate.startsWith('template:')) {
+      const templateKey = urlOrTemplate.split(':')[1];
+      const template = avatarTemplates.find(t => t.value === templateKey) || avatarTemplates[0];
+      return (
+        <div className={`${sizeClass} rounded-full bg-gradient-to-br ${template.bg} flex items-center justify-center border border-brand-green font-bold shadow-sm shrink-0`}>
+          <span>{template.emoji}</span>
+        </div>
+      );
+    } else if (urlOrTemplate) {
+      return (
+        <img
+          src={urlOrTemplate}
+          alt="Avatar"
+          className={`${sizeClass} rounded-full object-cover border border-brand-green shadow-sm shrink-0`}
+        />
+      );
+    } else {
+      return (
+        <div className={`${sizeClass} rounded-full bg-brand-green/20 border border-brand-green/50 flex items-center justify-center font-bold text-brand-green uppercase shrink-0`}>
+          {nameString ? nameString[0] : 'U'}
+        </div>
+      );
+    }
+  };
+
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Meal Search', path: '/search', icon: Search },
@@ -53,7 +88,7 @@ const Navigation = ({ user, logout }) => {
                 className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-medium ${
                   isActive
                     ? 'bg-brand-green/10 text-brand-green border-l-2 border-brand-green'
-                    : 'text-brand-textMuted hover:bg-brand-gray hover:text-white'
+                    : 'text-brand-gray hover:bg-white/10 hover:text-white'
                 }`}
               >
                 <Icon size={20} />
@@ -65,12 +100,10 @@ const Navigation = ({ user, logout }) => {
 
         <div className="border-t border-brand-border pt-4 px-2">
           <div className="flex items-center gap-3 mb-4 px-2">
-            <div className="w-10 h-10 rounded-full bg-brand-green/20 border border-brand-green/50 flex items-center justify-center font-bold text-brand-green uppercase">
-              {user.name ? user.name[0] : 'U'}
-            </div>
+            {renderAvatar(user.profilePicture, user.name)}
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold truncate text-white">{user.name}</p>
-              <p className="text-xs text-brand-textMuted truncate">
+              <p className="text-xs text-brand-gray truncate">
                 Streak: {user.streak || 0} 🔥
               </p>
             </div>
@@ -95,7 +128,7 @@ const Navigation = ({ user, logout }) => {
               key={item.path}
               to={item.path}
               className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors ${
-                isActive ? 'text-brand-green' : 'text-brand-textMuted'
+                isActive ? 'text-brand-green' : 'text-brand-gray'
               }`}
             >
               <Icon size={20} />

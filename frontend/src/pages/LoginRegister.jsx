@@ -67,7 +67,7 @@ const LoginRegister = ({ setUser }) => {
   };
 
   return (
-    <div className="min-h-screen bg-brand-black text-white relative flex items-center justify-center py-12 px-6">
+    <div className="min-h-screen bg-brand-black text-brand-charcoal relative flex items-center justify-center py-12 px-6">
       {/* Background radial effects */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-brand-green/5 rounded-full blur-[120px] pointer-events-none"></div>
 
@@ -149,7 +149,7 @@ const LoginRegister = ({ setUser }) => {
                     placeholder="Enter your name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-brand-black border border-brand-border rounded-2xl focus:outline-none focus:border-brand-green transition-colors text-white placeholder-brand-textMuted text-sm font-medium"
+                    className="w-full pl-12 pr-4 py-3 bg-brand-black border border-brand-border rounded-2xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal placeholder-brand-textMuted text-sm font-medium"
                   />
                 </div>
               </div>
@@ -169,7 +169,7 @@ const LoginRegister = ({ setUser }) => {
                   placeholder="name@domain.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-brand-black border border-brand-border rounded-2xl focus:outline-none focus:border-brand-green transition-colors text-white placeholder-brand-textMuted text-sm font-medium"
+                  className="w-full pl-12 pr-4 py-3 bg-brand-black border border-brand-border rounded-2xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal placeholder-brand-textMuted text-sm font-medium"
                 />
               </div>
             </div>
@@ -188,7 +188,7 @@ const LoginRegister = ({ setUser }) => {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-brand-black border border-brand-border rounded-2xl focus:outline-none focus:border-brand-green transition-colors text-white placeholder-brand-textMuted text-sm font-medium"
+                  className="w-full pl-12 pr-4 py-3 bg-brand-black border border-brand-border rounded-2xl focus:outline-none focus:border-brand-green transition-colors text-brand-charcoal placeholder-brand-textMuted text-sm font-medium"
                 />
               </div>
             </div>
@@ -196,7 +196,7 @@ const LoginRegister = ({ setUser }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 rounded-2xl bg-brand-green text-black font-bold hover:bg-white hover:scale-[1.02] transition-all duration-300 flex items-center justify-center text-sm shadow-lg disabled:opacity-50"
+              className="w-full py-4 rounded-2xl bg-brand-green text-brand-charcoal font-bold hover:bg-brand-charcoal hover:text-white hover:scale-[1.02] transition-all duration-300 flex items-center justify-center text-sm shadow-lg disabled:opacity-50"
             >
               {loading ? 'Processing...' : isLogin ? 'Access Dashboard' : 'Create Profile'}
             </button>

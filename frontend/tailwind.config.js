@@ -8,14 +8,17 @@ export default {
     extend: {
       colors: {
         brand: {
-          black: "#1A1515", // Rich Espresso background
-          charcoal: "#241E1E", // Cocoa Charcoal
-          card: "#302828", // Lighter warm cocoa brown for card components
-          green: "#9D73E6", // Accent Warm Purple / Violet
-          glow: "rgba(157, 115, 230, 0.4)", // Purple Glow
-          gray: "#3E3333", // Warm Gray-Brown for hover states
-          border: "#4A3C3C", // Soft Brown Border
-          textMuted: "#CFC2C2", // Muted Warm Oatmeal Beige text
+          black: "#EEE5D3", // Light Beige/Cream background
+          charcoal: "#222052", // Deep Navy
+          card: "#FFFFFF", // White cards for contrast
+          green: "#D2B68A", // Accent Gold/Tan
+          glow: "rgba(210, 182, 138, 0.4)", // Gold Glow
+          gray: "#B7B7B7", // Silver/Grey
+          beige: "#EEE5D3",
+          textMuted: "#7A757D", // Warm dark-grey for muted body text
+          navy: "#222052",
+          gold: "#D2B68A",
+          border: "#D2B68A"
         }
       },
       fontFamily: {

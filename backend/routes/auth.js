@@ -43,6 +43,7 @@ router.post('/register', async (req, res) => {
       },
       streak: 1,
       lastLogDate: new Date().toISOString().split('T')[0],
+      profilePicture: '',
     };
 
     usersMemory.push(newUser);
@@ -58,6 +59,7 @@ router.post('/register', async (req, res) => {
       activityLevel: newUser.activityLevel,
       goals: newUser.goals,
       streak: newUser.streak,
+      profilePicture: newUser.profilePicture || '',
       token: generateToken(newUser._id),
     });
   }
@@ -87,6 +89,7 @@ router.post('/register', async (req, res) => {
         activityLevel: user.activityLevel,
         goals: user.goals,
         streak: user.streak,
+        profilePicture: user.profilePicture || '',
         token: generateToken(user._id),
       });
     } else {
@@ -141,6 +144,7 @@ router.post('/login', async (req, res) => {
         activityLevel: user.activityLevel,
         goals: user.goals,
         streak: user.streak,
+        profilePicture: user.profilePicture || '',
         token: generateToken(user._id),
       });
     } else {
@@ -187,6 +191,7 @@ router.post('/login', async (req, res) => {
         activityLevel: user.activityLevel,
         goals: user.goals,
         streak: user.streak,
+        profilePicture: user.profilePicture || '',
         token: generateToken(user._id),
       });
     } else {
@@ -233,6 +238,7 @@ router.put('/profile', protect, async (req, res) => {
       user.age = req.body.age !== undefined ? Number(req.body.age) : user.age;
       user.gender = req.body.gender || user.gender;
       user.activityLevel = req.body.activityLevel || user.activityLevel;
+      user.profilePicture = req.body.profilePicture !== undefined ? req.body.profilePicture : user.profilePicture;
 
       if (req.body.goals) {
         user.goals = {
@@ -259,6 +265,7 @@ router.put('/profile', protect, async (req, res) => {
         activityLevel: user.activityLevel,
         goals: user.goals,
         streak: user.streak,
+        profilePicture: user.profilePicture || '',
         token: generateToken(user._id),
       });
     } else {
@@ -276,6 +283,7 @@ router.put('/profile', protect, async (req, res) => {
       user.age = req.body.age !== undefined ? req.body.age : user.age;
       user.gender = req.body.gender || user.gender;
       user.activityLevel = req.body.activityLevel || user.activityLevel;
+      user.profilePicture = req.body.profilePicture !== undefined ? req.body.profilePicture : user.profilePicture;
 
       if (req.body.goals) {
         user.goals = {
@@ -304,6 +312,7 @@ router.put('/profile', protect, async (req, res) => {
         activityLevel: updatedUser.activityLevel,
         goals: updatedUser.goals,
         streak: updatedUser.streak,
+        profilePicture: updatedUser.profilePicture || '',
         token: generateToken(updatedUser._id),
       });
     } else {

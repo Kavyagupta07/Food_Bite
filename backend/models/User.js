@@ -54,6 +54,10 @@ const userSchema = new mongoose.Schema(
     lastLogDate: {
       type: String, // YYYY-MM-DD
     },
+    profilePicture: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,

@@ -127,10 +127,10 @@ const Dashboard = ({ user, setUser }) => {
 
   // Group meals by mealType
   const mealTypes = {
-    breakfast: { label: 'Breakfast', icon: Coffee, color: 'text-amber-400' },
-    lunch: { label: 'Lunch', icon: Utensils, color: 'text-emerald-400' },
-    dinner: { label: 'Dinner', icon: Moon, color: 'text-blue-400' },
-    snack: { label: 'Snacks', icon: Sparkles, color: 'text-purple-400' },
+    breakfast: { label: 'Breakfast', icon: Coffee, color: 'text-amber-600' },
+    lunch: { label: 'Lunch', icon: Utensils, color: 'text-emerald-600' },
+    dinner: { label: 'Dinner', icon: Moon, color: 'text-blue-600' },
+    snack: { label: 'Snacks', icon: Sparkles, color: 'text-brand-green' },
   };
 
   // Circular progress ring setup
@@ -140,7 +140,7 @@ const Dashboard = ({ user, setUser }) => {
 
   if (loading && meals.length === 0) {
     return (
-      <div className="flex-1 min-h-screen bg-brand-black md:pl-64 py-10 px-6 flex flex-col justify-center items-center">
+      <div className="flex-1 min-h-screen bg-brand-beige md:pl-64 py-10 px-6 flex flex-col justify-center items-center">
         <div className="w-16 h-16 border-4 border-brand-green/20 border-t-brand-green rounded-full animate-spin"></div>
         <p className="mt-4 text-brand-textMuted text-sm font-semibold tracking-wider uppercase animate-pulse">Loading Gym Stats...</p>
       </div>
@@ -148,16 +148,16 @@ const Dashboard = ({ user, setUser }) => {
   }
 
   return (
-    <div className="flex-1 min-h-screen bg-brand-black md:pl-64 pb-24 md:pb-12 text-white relative">
+    <div className="flex-1 min-h-screen bg-brand-beige md:pl-64 pb-24 md:pb-12 text-brand-charcoal relative">
       <div className="max-w-7xl mx-auto px-6 py-8">
         
         {/* Header Dashboard Banner */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight">ATHLETE DASHBOARD</h1>
-            <p className="text-sm text-brand-textMuted">Welcome back, <span className="text-white font-semibold">{user?.name}</span>. Streak: {user?.streak || 1} 🔥</p>
+            <p className="text-sm text-brand-textMuted">Welcome back, <span className="text-brand-charcoal font-bold">{user?.name}</span>. Streak: {user?.streak || 1} 🔥</p>
           </div>
-          <div className="flex items-center gap-3 bg-brand-charcoal border border-brand-border rounded-2xl px-4 py-2 text-sm font-medium">
+          <div className="flex items-center gap-3 bg-brand-charcoal border border-brand-border rounded-2xl px-4 py-2 text-sm font-medium text-white">
             <span className="text-brand-textMuted">Log Date:</span>
             <input 
               type="date" 
@@ -185,7 +185,7 @@ const Dashboard = ({ user, setUser }) => {
                     cx="72"
                     cy="72"
                     r={radius}
-                    stroke="#222"
+                    stroke="#E5DCC6"
                     strokeWidth="12"
                     fill="transparent"
                   />
@@ -193,7 +193,7 @@ const Dashboard = ({ user, setUser }) => {
                     cx="72"
                     cy="72"
                     r={radius}
-                    stroke="#9D73E6"
+                    stroke="#D2B68A"
                     strokeWidth="12"
                     fill="transparent"
                     strokeDasharray={circumference}
@@ -222,7 +222,7 @@ const Dashboard = ({ user, setUser }) => {
                   <div>
                     <div className="flex justify-between text-xs font-semibold mb-1">
                       <span className="text-brand-textMuted">Protein</span>
-                      <span className="text-white">{Math.round(totalProtein)}g <span className="text-brand-textMuted">/ {proteinTarget}g</span></span>
+                      <span className="text-brand-charcoal font-bold">{Math.round(totalProtein)}g <span className="text-brand-textMuted font-medium">/ {proteinTarget}g</span></span>
                     </div>
                     <div className="w-full h-2 bg-brand-gray rounded-full overflow-hidden">
                       <div 
@@ -236,11 +236,11 @@ const Dashboard = ({ user, setUser }) => {
                   <div>
                     <div className="flex justify-between text-xs font-semibold mb-1">
                       <span className="text-brand-textMuted">Carbs</span>
-                      <span className="text-white">{Math.round(totalCarbs)}g <span className="text-brand-textMuted">/ {carbsTarget}g</span></span>
+                      <span className="text-brand-charcoal font-bold">{Math.round(totalCarbs)}g <span className="text-brand-textMuted font-medium">/ {carbsTarget}g</span></span>
                     </div>
                     <div className="w-full h-2 bg-brand-gray rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-blue-500 rounded-full transition-all duration-500"
+                        className="h-full bg-brand-charcoal rounded-full transition-all duration-500"
                         style={{ width: `${carbPercent}%` }}
                       ></div>
                     </div>
@@ -250,11 +250,11 @@ const Dashboard = ({ user, setUser }) => {
                   <div>
                     <div className="flex justify-between text-xs font-semibold mb-1">
                       <span className="text-brand-textMuted">Fats</span>
-                      <span className="text-white">{Math.round(totalFats)}g <span className="text-brand-textMuted">/ {fatsTarget}g</span></span>
+                      <span className="text-brand-charcoal font-bold">{Math.round(totalFats)}g <span className="text-brand-textMuted font-medium">/ {fatsTarget}g</span></span>
                     </div>
                     <div className="w-full h-2 bg-brand-gray rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-amber-500 rounded-full transition-all duration-500"
+                        className="h-full bg-brand-gray rounded-full transition-all duration-500"
                         style={{ width: `${fatPercent}%` }}
                       ></div>
                     </div>
@@ -270,7 +270,7 @@ const Dashboard = ({ user, setUser }) => {
                 <div className="flex gap-2">
                   <button 
                     onClick={() => navigate('/search')}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-green text-black font-bold text-xs hover:bg-white transition-colors"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-green text-brand-charcoal font-bold text-xs hover:bg-brand-charcoal hover:text-white transition-colors"
                   >
                     <Plus size={14} /> Add Meal
                   </button>
@@ -286,7 +286,7 @@ const Dashboard = ({ user, setUser }) => {
                   <p className="text-sm text-brand-textMuted max-w-sm mb-6">Track your breakfast, lunch, dinner, or snacks to start hitting your fitness targets.</p>
                   <button 
                     onClick={() => navigate('/search')}
-                    className="px-6 py-2.5 rounded-full border border-brand-green/30 text-brand-green font-bold text-xs hover:bg-brand-green/10 transition-colors"
+                    className="px-6 py-2.5 rounded-full border border-brand-green/30 text-brand-charcoal font-bold text-xs hover:bg-brand-green/10 transition-colors"
                   >
                     Log First Meal
                   </button>
@@ -320,7 +320,7 @@ const Dashboard = ({ user, setUser }) => {
                                   />
                                 )}
                                 <div>
-                                  <h4 className="font-semibold text-sm truncate text-white">{meal.mealName}</h4>
+                                  <h4 className="font-semibold text-sm truncate text-brand-charcoal">{meal.mealName}</h4>
                                   <p className="text-[10px] text-brand-textMuted mt-0.5">
                                     {meal.servingSize} &bull; P: {meal.protein}g &bull; C: {meal.carbs}g &bull; F: {meal.fats}g
                                   </p>
@@ -350,7 +350,7 @@ const Dashboard = ({ user, setUser }) => {
           <div className="space-y-8">
             
             {/* AI Coach Insights Box */}
-            <div className="glass-panel p-6 rounded-3xl border border-brand-border relative overflow-hidden bg-gradient-to-br from-brand-charcoal to-brand-charcoal/40">
+            <div className="glass-panel p-6 rounded-3xl border border-brand-border relative overflow-hidden text-brand-charcoal">
               <div className="absolute top-0 right-0 w-24 h-24 bg-brand-green/5 rounded-bl-full blur-xl pointer-events-none"></div>
               
               <div className="flex items-center gap-2 mb-4">
@@ -360,9 +360,9 @@ const Dashboard = ({ user, setUser }) => {
 
               {coachData ? (
                 <div className="space-y-4 text-sm">
-                  <div className="p-3.5 bg-brand-black/50 border border-brand-border/60 rounded-2xl">
+                  <div className="p-3.5 bg-brand-charcoal/5 border border-brand-charcoal/10 rounded-2xl">
                     <p className="text-brand-green font-bold text-xs uppercase tracking-wider mb-1">Live Coaching Tip</p>
-                    <p className="text-white text-xs leading-relaxed font-medium">{coachData.coachAdvice}</p>
+                    <p className="text-brand-charcoal text-xs leading-relaxed font-medium">{coachData.coachAdvice}</p>
                   </div>
 
                   <div className="p-3.5 bg-brand-green/5 border border-brand-green/10 rounded-2xl">
@@ -378,10 +378,10 @@ const Dashboard = ({ user, setUser }) => {
                           <div 
                             key={idx} 
                             onClick={() => navigate('/search')}
-                            className="p-3 bg-brand-black border border-brand-border rounded-2xl hover:border-brand-green/30 transition-all cursor-pointer flex justify-between items-center"
+                            className="p-3 bg-brand-beige border border-brand-border rounded-2xl hover:border-brand-green/30 transition-all cursor-pointer flex justify-between items-center text-brand-charcoal"
                           >
                             <div>
-                              <p className="font-bold text-xs text-white">{sug.name}</p>
+                              <p className="font-bold text-xs text-brand-charcoal">{sug.name}</p>
                               <p className="text-[10px] text-brand-textMuted">P: {sug.protein}g &bull; C: {sug.carbs}g &bull; {sug.calories} kcal</p>
                             </div>
                             <PlusCircle size={14} className="text-brand-green" />
